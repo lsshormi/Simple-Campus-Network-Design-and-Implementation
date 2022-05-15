@@ -1,0 +1,158 @@
+---department switch
+en
+conf t
+int range fa0/1-24
+switchport mode access
+switchport access vlan 110 
+do wr
+
+---campus/branch switch
+en
+conf t
+int gig1/0/3
+switchport mode access
+switchport access vlan 120 
+ex
+
+--
+en
+conf t
+int gig1/0/1
+switchport trunk encapsulation dot1q
+switchport mode trunk
+ex
+
+do wr
+
+--department Vlan routing
+en 
+conf t
+int gig0/0.100
+encapsulation dot1q 100
+ip address 192.168.10.1 255.255.255.0
+ex
+
+-- department dhcp pool routing
+--admin--
+service dhcp
+ip dhcp pool admin-pool
+network 192.168.1.0 255.255.255.0
+default-router 192.168.1.1
+dns-server 192.168.1.1
+ex
+
+--hr--
+
+ip dhcp pool hr-pool
+network 192.168.2.0 255.255.255.0
+default-router 192.168.2.1
+dns-server 192.168.2.1
+ex
+
+--finance--
+
+ip dhcp pool finance-pool
+network 192.168.3.0 255.255.255.0
+default-router 192.168.3.1
+dns-server 192.168.3.1
+ex
+
+--English--
+
+ip dhcp pool english-pool
+network 192.168.4.0 255.255.255.0
+default-router 192.168.4.1
+dns-server 192.168.4.1
+ex
+
+--EEE--
+
+ip dhcp pool eee-pool
+network 192.168.5.0 255.255.255.0
+default-router 192.168.5.1
+dns-server 192.168.5.1
+ex
+
+--Pharmacy--
+
+ip dhcp pool pharmacy-pool
+network 192.168.6.0 255.255.255.0
+default-router 192.168.6.1
+dns-server 192.168.6.1
+ex
+
+--civil--
+
+ip dhcp pool civil-pool
+network 192.168.7.0 255.255.255.0
+default-router 192.168.7.1
+dns-server 192.168.7.1
+ex
+
+--cse--
+
+ip dhcp pool cse-pool
+network 192.168.8.0 255.255.255.0
+default-router 192.168.8.1
+dns-server 192.168.8.1
+ex
+
+--architecture--
+
+ip dhcp pool architecture-pool
+network 192.168.9.0 255.255.255.0
+default-router 192.168.9.1
+dns-server 192.168.9.1
+ex
+
+--law--
+
+ip dhcp pool law-pool
+network 192.168.10.0 255.255.255.0
+default-router 192.168.10.1
+dns-server 192.168.10.1
+ex
+
+do wr
+
+---rip v2
+--branch router-- 
+en
+conf t
+router rip
+version 2
+network 192.168.11.0
+network 192.168.12.0
+network 10.10.10.0
+ex
+do wr
+
+--main router-- 
+en
+conf t
+router rip
+version 2
+network 10.10.10.0
+network 10.10.10.4
+network 192.168.1.0
+network 192.168.2.0
+network 192.168.3.0
+network 192.168.4.0
+network 192.168.5.0
+network 192.168.6.0
+network 192.168.7.0
+network 192.168.8.0
+network 192.168.9.0
+network 192.168.10.0
+ex
+do wr
+
+--cloud router--
+en
+conf t
+router rip
+version 2
+network 20.10.10.0
+network 10.10.10.4
+ex
+do wr
